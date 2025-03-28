@@ -2,8 +2,6 @@
 using Dalamud.Plugin;
 using System.Collections.Generic;
 using System.Globalization;
-using Dalamud.Game.ClientState.Objects;
-using Dalamud.IoC;
 using Dalamud.Plugin.Services;
 using PeepingTom.Resources;
 using Lumina.Excel.Sheets;

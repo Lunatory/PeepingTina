@@ -85,35 +85,14 @@ namespace PeepingTom {
                 this.ShowMainWindow();
             }
 
-            const ImGuiWindowFlags flags = ImGuiWindowFlags.NoBackground
-                                           | ImGuiWindowFlags.NoTitleBar
-                                           | ImGuiWindowFlags.NoNav
-                                           | ImGuiWindowFlags.NoNavInputs
-                                           | ImGuiWindowFlags.NoFocusOnAppearing
-                                           | ImGuiWindowFlags.NoNavFocus
-                                           | ImGuiWindowFlags.NoInputs
-                                           | ImGuiWindowFlags.NoMouseInputs
-                                           | ImGuiWindowFlags.NoSavedSettings
-                                           | ImGuiWindowFlags.NoDecoration
-                                           | ImGuiWindowFlags.NoScrollWithMouse;
-            ImGuiHelpers.ForceNextWindowMainViewport();
-            if (!ImGui.Begin("Peeping Tom targeting indicator dummy window", flags)) {
-                ImGui.End();
-                return;
-            }
-
             if (this.Plugin.Config.MarkTargeted) {
                 this.MarkPlayer(this.GetCurrentTarget(), this.Plugin.Config.TargetedColour, this.Plugin.Config.TargetedSize);
             }
 
-            if (!this.Plugin.Config.MarkTargeting) {
-                goto EndDummy;
-            }
+            if (!this.Plugin.Config.MarkTargeting) return;
 
             var player = Service.ClientState.LocalPlayer;
-            if (player == null) {
-                goto EndDummy;
-            }
+            if (player == null) return;
 
             var targeting = this.Plugin.Watcher.CurrentTargeters
                 .Select(targeter => Service.ObjectTable.FirstOrDefault(obj => obj.GameObjectId == targeter.GameObjectId))
@@ -123,9 +102,6 @@ namespace PeepingTom {
             foreach (var targeter in targeting) {
                 this.MarkPlayer(targeter, this.Plugin.Config.TargetingColour, this.Plugin.Config.TargetingSize);
             }
-
-            EndDummy:
-            ImGui.End();
         }
 
         private void ShowSettings() {
@@ -585,8 +561,8 @@ namespace PeepingTom {
 
             ImGui.PushClipRect(ImGuiHelpers.MainViewport.Pos, ImGuiHelpers.MainViewport.Pos + ImGuiHelpers.MainViewport.Size, false);
 
-            ImGui.GetWindowDrawList().AddCircleFilled(
-                ImGuiHelpers.MainViewport.Pos + new Vector2(screenPos.X, screenPos.Y),
+            ImGui.GetBackgroundDrawList().AddCircleFilled(
+                new Vector2(screenPos.X, screenPos.Y),
                 size,
                 ImGui.GetColorU32(colour),
                 100

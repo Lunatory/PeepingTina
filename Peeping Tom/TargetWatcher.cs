@@ -4,12 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
+using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.Text;
 using Dalamud.Plugin.Services;
+using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using PeepingTom.Ipc;
 using PeepingTom.Resources;
 
@@ -114,7 +115,7 @@ namespace PeepingTom {
 
         private Targeter[] GetTargeting(IEnumerable<IGameObject> objects, IGameObject player) {
             return objects
-                .Where(obj => obj.TargetObjectId == player.GameObjectId && obj is IPlayerCharacter)
+                .Where(obj => obj is IPlayerCharacter && (obj.ObjectIndex == 0 ? (Service.TargetManager.SoftTarget ?? Service.TargetManager.Target)?.GameObjectId == player.GameObjectId : obj.TargetObjectId == player.GameObjectId))
                 // .Where(obj => Marshal.ReadByte(obj.Address + ActorOffsets.PlayerCharacterTargetActorId + 4) == 0)
                 .Cast<IPlayerCharacter>()
                 .Where(actor => this.Plugin.Config.LogParty || !InParty(actor))
@@ -125,16 +126,11 @@ namespace PeepingTom {
                 .ToArray();
         }
 
-        private static byte GetStatus(IGameObject actor) {
-            var statusPtr = actor.Address + 0x1980; // updated 5.4
-            return Marshal.ReadByte(statusPtr);
-        }
+        private static bool InCombat(IGameObject actor) => actor is IPlayerCharacter pc && pc.StatusFlags.HasFlag(StatusFlags.InCombat);
 
-        private static bool InCombat(IGameObject actor) => (GetStatus(actor) & 2) > 0;
+        private static bool InParty(IGameObject actor) => actor is IPlayerCharacter pc && pc.StatusFlags.HasFlag(StatusFlags.PartyMember);
 
-        private static bool InParty(IGameObject actor) => (GetStatus(actor) & 16) > 0;
-
-        private static bool InAlliance(IGameObject actor) => (GetStatus(actor) & 32) > 0;
+        private static bool InAlliance(IGameObject actor) => actor is IPlayerCharacter pc && pc.StatusFlags.HasFlag(StatusFlags.AllianceMember);
 
         private bool CanPlaySound() {
             if (!this.Plugin.Config.PlaySoundOnTarget) {
