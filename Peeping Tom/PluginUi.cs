@@ -559,7 +559,7 @@ namespace PeepingTom {
                 return;
             }
 
-            ImGui.PushClipRect(ImGuiHelpers.MainViewport.Pos, ImGuiHelpers.MainViewport.Pos + ImGuiHelpers.MainViewport.Size, false);
+            ImGui.GetBackgroundDrawList().PushClipRect(ImGuiHelpers.MainViewport.Pos, ImGuiHelpers.MainViewport.Pos + ImGuiHelpers.MainViewport.Size, false);
 
             ImGui.GetBackgroundDrawList().AddCircleFilled(
                 new Vector2(screenPos.X, screenPos.Y),
@@ -568,7 +568,7 @@ namespace PeepingTom {
                 100
             );
 
-            ImGui.PopClipRect();
+            ImGui.GetBackgroundDrawList().PopClipRect();
         }
 
         private IPlayerCharacter? GetCurrentTarget() {
