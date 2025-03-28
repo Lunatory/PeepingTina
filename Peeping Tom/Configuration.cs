@@ -49,15 +49,17 @@ namespace PeepingTom {
         public bool ShowInCombat { get; set; }
         public bool ShowInInstance { get; set; }
         public bool ShowInCutscenes { get; set; }
+        public bool ShowSettingsButton { get; set; } = true;
+        public bool AllowCloseWithEscape { get; set; }
 
         public int PollFrequency { get; set; } = 100;
 
         public void Initialize(IDalamudPluginInterface pluginInterface) {
-            this.Interface = pluginInterface;
+            Interface = pluginInterface;
         }
 
         public void Save() {
-            this.Interface.SavePluginConfig(this);
+            Interface.SavePluginConfig(this);
         }
     }
 }

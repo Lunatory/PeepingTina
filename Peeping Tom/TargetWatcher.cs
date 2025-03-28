@@ -24,34 +24,34 @@ namespace PeepingTom {
 
         private Targeter[] Current { get; set; } = [];
 
-        public IReadOnlyCollection<Targeter> CurrentTargeters => this.Current;
+        public IReadOnlyCollection<Targeter> CurrentTargeters => Current;
 
         private List<Targeter> Previous { get; } = [];
 
-        public IReadOnlyCollection<Targeter> PreviousTargeters => this.Previous;
+        public IReadOnlyCollection<Targeter> PreviousTargeters => Previous;
 
         public TargetWatcher(Plugin plugin) {
-            this.Plugin = plugin;
-            this.UpdateWatch.Start();
+            Plugin = plugin;
+            UpdateWatch.Start();
 
-            Service.Framework.Update += this.OnFrameworkUpdate;
+            Service.Framework.Update += OnFrameworkUpdate;
         }
 
         public void Dispose() {
-            Service.Framework.Update -= this.OnFrameworkUpdate;
+            Service.Framework.Update -= OnFrameworkUpdate;
         }
 
         public void ClearPrevious() {
-            this.Previous.Clear();
+            Previous.Clear();
         }
 
         private void OnFrameworkUpdate(IFramework framework1) {
-            if (this.Plugin.InPvp) {
+            if (Plugin.InPvp) {
                 return;
             }
 
-            if (this.UpdateWatch.Elapsed > TimeSpan.FromMilliseconds(this.Plugin.Config.PollFrequency)) {
-                this.Update();
+            if (UpdateWatch.Elapsed > TimeSpan.FromMilliseconds(Plugin.Config.PollFrequency)) {
+                Update();
             }
         }
 
@@ -62,54 +62,54 @@ namespace PeepingTom {
             }
 
             // get targeters and set a copy so we can release the mutex faster
-            var newCurrent = this.GetTargeting(Service.ObjectTable, player);
+            var newCurrent = GetTargeting(Service.ObjectTable, player);
 
-            foreach (var newTargeter in newCurrent.Where(t => this.Current.All(c => c.GameObjectId != t.GameObjectId))) {
+            foreach (var newTargeter in newCurrent.Where(t => Current.All(c => c.GameObjectId != t.GameObjectId))) {
                 try {
-                    this.Plugin.IpcManager.SendNewTargeter(newTargeter);
+                    Plugin.IpcManager.SendNewTargeter(newTargeter);
                 } catch (Exception ex) {
                     Service.Log.Error(ex, "Failed to send IPC message");
                 }
             }
 
-            foreach (var stopped in this.Current.Where(t => newCurrent.All(c => c.GameObjectId != t.GameObjectId))) {
+            foreach (var stopped in Current.Where(t => newCurrent.All(c => c.GameObjectId != t.GameObjectId))) {
                 try {
-                    this.Plugin.IpcManager.SendStoppedTargeting(stopped);
+                    Plugin.IpcManager.SendStoppedTargeting(stopped);
                 } catch (Exception ex) {
                     Service.Log.Error(ex, "Failed to send IPC message");
                 }
             }
 
-            this.Current = newCurrent;
+            Current = newCurrent;
 
-            this.HandleHistory(this.Current);
+            HandleHistory(Current);
 
             // play sound if necessary
-            if (this.CanPlaySound()) {
-                this.SoundWatch?.Restart();
-                this.PlaySound();
+            if (CanPlaySound()) {
+                SoundWatch?.Restart();
+                PlaySound();
             }
 
-            this.LastTargetAmount = this.Current.Length;
+            LastTargetAmount = Current.Length;
         }
 
         private void HandleHistory(Targeter[] targeting) {
-            if (!this.Plugin.Config.KeepHistory || !this.Plugin.Config.HistoryWhenClosed && !this.Plugin.Ui.Visible) {
+            if (!Plugin.Config.KeepHistory || !Plugin.Config.HistoryWhenClosed && !Plugin.Ui.MainWindow.IsVisible) {
                 return;
             }
 
             foreach (var targeter in targeting) {
                 // add the targeter to the previous list
-                if (this.Previous.Any(old => old.GameObjectId == targeter.GameObjectId)) {
-                    this.Previous.RemoveAll(old => old.GameObjectId == targeter.GameObjectId);
+                if (Previous.Any(old => old.GameObjectId == targeter.GameObjectId)) {
+                    Previous.RemoveAll(old => old.GameObjectId == targeter.GameObjectId);
                 }
 
-                this.Previous.Insert(0, targeter);
+                Previous.Insert(0, targeter);
             }
 
             // only keep the configured number of previous targeters (ignoring ones that are currently targeting)
-            while (this.Previous.Count(old => targeting.All(actor => actor.GameObjectId != old.GameObjectId)) > this.Plugin.Config.NumHistory) {
-                this.Previous.RemoveAt(this.Previous.Count - 1);
+            while (Previous.Count(old => targeting.All(actor => actor.GameObjectId != old.GameObjectId)) > Plugin.Config.NumHistory) {
+                Previous.RemoveAt(Previous.Count - 1);
             }
         }
 
@@ -118,10 +118,10 @@ namespace PeepingTom {
                 .Where(obj => obj is IPlayerCharacter && (obj.ObjectIndex == 0 ? (Service.TargetManager.SoftTarget ?? Service.TargetManager.Target)?.GameObjectId == player.GameObjectId : obj.TargetObjectId == player.GameObjectId))
                 // .Where(obj => Marshal.ReadByte(obj.Address + ActorOffsets.PlayerCharacterTargetActorId + 4) == 0)
                 .Cast<IPlayerCharacter>()
-                .Where(actor => this.Plugin.Config.LogParty || !InParty(actor))
-                .Where(actor => this.Plugin.Config.LogAlliance || !InAlliance(actor))
-                .Where(actor => this.Plugin.Config.LogInCombat || !InCombat(actor))
-                .Where(actor => this.Plugin.Config.LogSelf || actor.GameObjectId != player.GameObjectId)
+                .Where(actor => Plugin.Config.LogParty || !InParty(actor))
+                .Where(actor => Plugin.Config.LogAlliance || !InAlliance(actor))
+                .Where(actor => Plugin.Config.LogInCombat || !InCombat(actor))
+                .Where(actor => Plugin.Config.LogSelf || actor.GameObjectId != player.GameObjectId)
                 .Select(actor => new Targeter(actor))
                 .ToArray();
         }
@@ -133,29 +133,29 @@ namespace PeepingTom {
         private static bool InAlliance(IGameObject actor) => actor is IPlayerCharacter pc && pc.StatusFlags.HasFlag(StatusFlags.AllianceMember);
 
         private bool CanPlaySound() {
-            if (!this.Plugin.Config.PlaySoundOnTarget) {
+            if (!Plugin.Config.PlaySoundOnTarget) {
                 return false;
             }
 
-            if (this.Current.Length <= this.LastTargetAmount) {
+            if (Current.Length <= LastTargetAmount) {
                 return false;
             }
 
-            if (!this.Plugin.Config.PlaySoundWhenClosed && !this.Plugin.Ui.Visible) {
+            if (!Plugin.Config.PlaySoundWhenClosed && !Plugin.Ui.MainWindow.IsVisible) {
                 return false;
             }
 
-            if (this.SoundWatch == null) {
-                this.SoundWatch = new Stopwatch();
+            if (SoundWatch == null) {
+                SoundWatch = new Stopwatch();
                 return true;
             }
 
-            var secs = this.SoundWatch.Elapsed.TotalSeconds;
-            return secs >= this.Plugin.Config.SoundCooldown;
+            var secs = SoundWatch.Elapsed.TotalSeconds;
+            return secs >= Plugin.Config.SoundCooldown;
         }
 
         private void PlaySound() {
-            var soundDevice = DirectSoundOut.Devices.FirstOrDefault(d => d.Guid == this.Plugin.Config.SoundDeviceNew);
+            var soundDevice = DirectSoundOut.Devices.FirstOrDefault(d => d.Guid == Plugin.Config.SoundDeviceNew);
             if (soundDevice == null) {
                 return;
             }
@@ -163,19 +163,19 @@ namespace PeepingTom {
             new Thread(() => {
                 WaveStream reader;
                 try {
-                    if (this.Plugin.Config.SoundPath == null) {
+                    if (Plugin.Config.SoundPath == null) {
                         reader = new WaveFileReader(Resource.AsStream("Resources/target.wav"));
                     } else {
-                        reader = new MediaFoundationReader(this.Plugin.Config.SoundPath);
+                        reader = new MediaFoundationReader(Plugin.Config.SoundPath);
                     }
                 } catch (Exception e) {
                     var error = string.Format(Language.SoundChatError, e.Message);
-                    this.SendError(error);
+                    SendError(error);
                     return;
                 }
 
                 using var channel = new WaveChannel32(reader);
-                channel.Volume = this.Plugin.Config.SoundVolume;
+                channel.Volume = Plugin.Config.SoundVolume;
                 channel.PadWithZeroes = false;
 
                 using (reader) {

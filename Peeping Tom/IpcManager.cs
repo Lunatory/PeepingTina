@@ -14,38 +14,38 @@ namespace PeepingTom {
         private ICallGateSubscriber<IToMessage, object> Subscriber { get; }
 
         internal IpcManager(Plugin plugin) {
-            this.Plugin = plugin;
+            Plugin = plugin;
 
-            this.Provider = Service.Interface.GetIpcProvider<IFromMessage, object>(IpcInfo.FromRegistrationName);
-            this.Subscriber = Service.Interface.GetIpcSubscriber<IToMessage, object>(IpcInfo.ToRegistrationName);
+            Provider = Service.Interface.GetIpcProvider<IFromMessage, object>(IpcInfo.FromRegistrationName);
+            Subscriber = Service.Interface.GetIpcSubscriber<IToMessage, object>(IpcInfo.ToRegistrationName);
 
-            this.Subscriber.Subscribe(this.ReceiveMessage);
+            Subscriber.Subscribe(ReceiveMessage);
         }
 
         public void Dispose() {
-            this.Subscriber.Unsubscribe(this.ReceiveMessage);
+            Subscriber.Unsubscribe(ReceiveMessage);
         }
 
         internal void SendAllTargeters() {
             var targeters = new List<(Targeter, bool)>();
-            targeters.AddRange(this.Plugin.Watcher.CurrentTargeters.Select(t => (t, true)));
-            targeters.AddRange(this.Plugin.Watcher.PreviousTargeters.Select(t => (t, false)));
+            targeters.AddRange(Plugin.Watcher.CurrentTargeters.Select(t => (t, true)));
+            targeters.AddRange(Plugin.Watcher.PreviousTargeters.Select(t => (t, false)));
 
-            this.Provider.SendMessage(new AllTargetersMessage(targeters));
+            Provider.SendMessage(new AllTargetersMessage(targeters));
         }
 
         internal void SendNewTargeter(Targeter targeter) {
-            this.Provider.SendMessage(new NewTargeterMessage(targeter));
+            Provider.SendMessage(new NewTargeterMessage(targeter));
         }
 
         internal void SendStoppedTargeting(Targeter targeter) {
-            this.Provider.SendMessage(new StoppedTargetingMessage(targeter));
+            Provider.SendMessage(new StoppedTargetingMessage(targeter));
         }
 
         private void ReceiveMessage(IToMessage message) {
             switch (message) {
                 case RequestTargetersMessage: {
-                    this.SendAllTargeters();
+                    SendAllTargeters();
                     break;
                 }
             }

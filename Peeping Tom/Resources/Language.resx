@@ -102,6 +102,12 @@
     <data name="SettingsWindowOpenLogin" xml:space="preserve">
         <value>Open on login</value>
     </data>
+    <data name="SettingsWindowShowConfigButton" xml:space="preserve">
+        <value>Show settings button</value>
+    </data>
+    <data name="SettingsWindowAllowCloseWithEscape" xml:space="preserve">
+        <value>Allow closing the main window with the escape key</value>
+    </data>
     <data name="SettingsWindowAllowMovement" xml:space="preserve">
         <value>Allow moving the main window</value>
     </data>
