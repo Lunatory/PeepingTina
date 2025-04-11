@@ -12,8 +12,8 @@ jobs:
   release:
     uses: Lunatory/DalamudRepo/.github/workflows/reusable_create_release.yml@master
     with:
-      internal_name: ChatBubblesPvP
-      solution_name: ChatBubblesPvP
+      internal_name: PeepingTina
+      solution_name: PeepingTina
       build_configuration: Release
       personal_plugin_repo: Lunatory/DalamudRepo
       personal_plugin_repo_branch: master
