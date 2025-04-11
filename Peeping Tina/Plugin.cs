@@ -2,20 +2,21 @@
 using Dalamud.Plugin;
 using System.Collections.Generic;
 using System.Globalization;
-using PeepingTom.Resources;
 using Lumina.Excel.Sheets;
+using PeepingTina.Resources;
 
-namespace PeepingTom {
+namespace PeepingTina {
     // ReSharper disable once ClassNeverInstantiated.Global
     public class Plugin : IDalamudPlugin {
-        internal static string Name => "Peeping Tom";
+        internal static string Name => "Peeping Tina";
 
         internal Configuration Config { get; }
         internal PluginUi Ui { get; }
         internal TargetWatcher Watcher { get; }
         internal IpcManager IpcManager { get; }
 
-        internal bool InPvp { get; private set; }
+        // Disable PvP Check
+        // internal bool InPvp { get; private set; }
 
         public Plugin(IDalamudPluginInterface pluginInterface) {
             pluginInterface.Create<Service>();
@@ -29,14 +30,14 @@ namespace PeepingTom {
             OnLanguageChange(Service.Interface.UiLanguage);
             Service.Interface.LanguageChanged += OnLanguageChange;
 
-            Service.CommandManager.AddHandler("/ppeepingtom", new CommandInfo(OnCommand) {
+            Service.CommandManager.AddHandler("/ppeepingtina", new CommandInfo(OnCommand) {
                 HelpMessage = "Use with no arguments to show the list. Use with \"c\" or \"config\" to show the config",
             });
-            Service.CommandManager.AddHandler("/ptom", new CommandInfo(OnCommand) {
-                HelpMessage = "Alias for /ppeepingtom",
+            Service.CommandManager.AddHandler("/ptina", new CommandInfo(OnCommand) {
+                HelpMessage = "Alias for /ppeepingtina",
             });
             Service.CommandManager.AddHandler("/ppeep", new CommandInfo(OnCommand) {
-                HelpMessage = "Alias for /ppeepingtom",
+                HelpMessage = "Alias for /ppeepingtina",
             });
 
             Service.ClientState.Login += OnLogin;
@@ -55,8 +56,8 @@ namespace PeepingTom {
             Service.ClientState.Logout -= OnLogout;
             Service.ClientState.Login -= OnLogin;
             Service.CommandManager.RemoveHandler("/ppeep");
-            Service.CommandManager.RemoveHandler("/ptom");
-            Service.CommandManager.RemoveHandler("/ppeepingtom");
+            Service.CommandManager.RemoveHandler("/ptina");
+            Service.CommandManager.RemoveHandler("/ppeepingtina");
             Service.Interface.LanguageChanged -= OnLanguageChange;
             IpcManager.Dispose();
             Ui.Dispose();
@@ -70,7 +71,8 @@ namespace PeepingTom {
         private void OnTerritoryChange(ushort e) {
             try {
                 var territory = Service.DataManager.GetExcelSheet<TerritoryType>().GetRow(e);
-                InPvp = territory.IsPvpZone;
+                // Disable PvP Check
+                // InPvp = territory.IsPvpZone;
             } catch (KeyNotFoundException) {
                 Service.Log.Warning("Could not get territory for current zone");
             }

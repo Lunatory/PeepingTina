@@ -11,10 +11,10 @@ using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.Text;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.Game.Control;
-using PeepingTom.Ipc;
-using PeepingTom.Resources;
+using PeepingTina.Ipc;
+using PeepingTina.Resources;
 
-namespace PeepingTom {
+namespace PeepingTina {
     internal class TargetWatcher : IDisposable {
         private Plugin Plugin { get; }
 
@@ -46,9 +46,10 @@ namespace PeepingTom {
         }
 
         private void OnFrameworkUpdate(IFramework framework1) {
-            if (Plugin.InPvp) {
-                return;
-            }
+            // Disable PvP Check
+            // if (Plugin.InPvp) {
+            //    return;
+            //}
 
             if (UpdateWatch.Elapsed > TimeSpan.FromMilliseconds(Plugin.Config.PollFrequency)) {
                 Update();

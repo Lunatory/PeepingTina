@@ -2,11 +2,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net9-windows</TargetFramework>
-        <RootNamespace>PeepingTom</RootNamespace>
+        <RootNamespace>PeepingTina</RootNamespace>
         <Version>1.7.21</Version>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
-        <AssemblyName>PeepingTom</AssemblyName>
+        <AssemblyName>PeepingTina</AssemblyName>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
@@ -62,7 +62,7 @@
         <PackageReference Include="Resourcer.Fody" Version="1.8.1" PrivateAssets="all"/>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Peeping Tom.Ipc\Peeping Tom.Ipc.csproj"/>
+        <ProjectReference Include="..\Peeping Tina.Ipc\Peeping Tina.Ipc.csproj" />
     </ItemGroup>
     <ItemGroup>
         <Compile Update="Resources\Language.Designer.cs">

@@ -2,7 +2,7 @@
 using Dalamud.Game.Text.SeStringHandling;
 using Newtonsoft.Json;
 
-namespace PeepingTom.Ipc {
+namespace PeepingTina.Ipc {
     public class SeStringConverter : JsonConverter<SeString> {
         public override void WriteJson(JsonWriter writer, SeString? value, JsonSerializer serializer) {
             if (value == null) {

@@ -1,4 +1,4 @@
-# Peeping Tom
+# Peeping Tina
 
 This plugin for FFXIVLauncher shows who was or currently is targeting you.
 

@@ -3,7 +3,7 @@ using Dalamud.Plugin;
 using System;
 using System.Numerics;
 
-namespace PeepingTom {
+namespace PeepingTina {
     [Serializable]
     internal class Configuration : IPluginConfiguration {
         public int Version { get; set; } = 1;

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Plugin.Ipc;
-using PeepingTom.Ipc;
-using PeepingTom.Ipc.From;
-using PeepingTom.Ipc.To;
+using PeepingTina.Ipc;
+using PeepingTina.Ipc.From;
+using PeepingTina.Ipc.To;
 
-namespace PeepingTom {
+namespace PeepingTina {
     internal class IpcManager : IDisposable {
         private Plugin Plugin { get; }
 

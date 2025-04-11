@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PeepingTom.Ipc.From {
+namespace PeepingTina.Ipc.From {
     [Serializable]
     public class NewTargeterMessage : IFromMessage {
         public Targeter Targeter { get; }

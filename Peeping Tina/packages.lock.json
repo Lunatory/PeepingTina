@@ -38,7 +38,7 @@
           "Fody": "6.6.4"
         }
       },
-      "PeepingTom.Ipc": {
+      "PeepingTina.Ipc": {
         "type": "Project"
       }
     }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PeepingTom.Ipc.From {
+namespace PeepingTina.Ipc.From {
     [Serializable]
     public class AllTargetersMessage : IFromMessage {
         public List<(Targeter targeter, bool currentlyTargeting)> Targeters { get; }

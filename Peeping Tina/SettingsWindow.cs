@@ -7,9 +7,9 @@ using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 using NAudio.Wave;
-using PeepingTom.Resources;
+using PeepingTina.Resources;
 
-namespace PeepingTom;
+namespace PeepingTina;
 
 public class SettingsWindow : Window {
     

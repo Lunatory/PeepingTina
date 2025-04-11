@@ -7,7 +7,7 @@ using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 
-namespace PeepingTom {
+namespace PeepingTina {
     internal class PluginUi : IDisposable {
         private Plugin Plugin { get; }
 
@@ -30,7 +30,8 @@ namespace PeepingTom {
         }
 
         public void Draw() {
-            if (Plugin.InPvp) return;
+            // Disable PvP Check
+            // if (Plugin.InPvp) return;
             
             WindowSystem.Draw();
             

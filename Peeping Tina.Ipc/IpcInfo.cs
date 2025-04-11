@@ -1,12 +1,12 @@
 ﻿using Dalamud.Plugin;
 using Dalamud.Plugin.Ipc;
-using PeepingTom.Ipc.From;
-using PeepingTom.Ipc.To;
+using PeepingTina.Ipc.From;
+using PeepingTina.Ipc.To;
 
-namespace PeepingTom.Ipc {
+namespace PeepingTina.Ipc {
     public static class IpcInfo {
-        public const string FromRegistrationName = "PeepingTom.From";
-        public const string ToRegistrationName = "PeepingTom.To";
+        public const string FromRegistrationName = "PeepingTina.From";
+        public const string ToRegistrationName = "PeepingTina.To";
 
         public static ICallGateProvider<IToMessage, object> GetProvider(IDalamudPluginInterface @interface) {
             return @interface.GetIpcProvider<IToMessage, object>(ToRegistrationName);

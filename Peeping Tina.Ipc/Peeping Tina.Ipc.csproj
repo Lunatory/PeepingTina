@@ -4,14 +4,14 @@
         <TargetFramework>net9.0-windows</TargetFramework>
         <Version>2.0.0</Version>
         <Nullable>enable</Nullable>
-        <RootNamespace>PeepingTom.Ipc</RootNamespace>
+        <RootNamespace>PeepingTina.Ipc</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <PackageId>PeepingTom.Ipc</PackageId>
-        <Title>PeepingTom.Ipc</Title>
+        <PackageId>PeepingTina.Ipc</PackageId>
+        <Title>PeepingTina.Ipc</Title>
         <Authors>lojewalo</Authors>
         <RepositoryUrl>https://git.anna.lgbt/anna/PeepingTom</RepositoryUrl>
         <Description>Types for IPC with the Dalamud plugin Peeping Tom.</Description>

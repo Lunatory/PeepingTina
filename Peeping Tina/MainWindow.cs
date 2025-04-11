@@ -12,10 +12,10 @@ using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using ImGuiNET;
-using PeepingTom.Ipc;
-using PeepingTom.Resources;
+using PeepingTina.Ipc;
+using PeepingTina.Resources;
 
-namespace PeepingTom;
+namespace PeepingTina;
 
 internal class MainWindow : Window {
     private PluginUi Ui { get; }
