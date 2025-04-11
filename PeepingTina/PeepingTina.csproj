@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Dalamud.NET.Sdk/12.0.2">
     <PropertyGroup>
-        <TargetFramework>net9-windows</TargetFramework>
-        <RootNamespace>PeepingTina</RootNamespace>
-        <Version>1.7.21</Version>
+        <TargetFramework>net9.0-windows</TargetFramework>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
-        <AssemblyName>PeepingTina</AssemblyName>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Version>1.7.21</Version>
+        <Configurations>Release;Debug</Configurations>
+        <Platforms>AnyCPU</Platforms>
+        <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-        <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
     </PropertyGroup>
     <PropertyGroup>
         <DalamudLibPath>$(AppData)\XIVLauncher\addon\Hooks\dev</DalamudLibPath>
